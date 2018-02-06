@@ -21,7 +21,7 @@ transliteration = True # Transliterates the corpus.
 input_length = 40 # Length of the input sequence.
 output_length = 1 # Length of the output sequence.
 data_set_size = 100000 # Size of the data-set to train on.
-num_epochs = 250 # Number of epochs to train.
+num_epochs = 150 # Number of epochs to train.
 batch_size = 512 # Batch size during training.
 hidden_size = 350 # Size of the hidden layer.
 generation_length = 160 # Size of the strings that are generated.
@@ -52,6 +52,9 @@ def main():
         epochs=num_epochs, batch_size=batch_size,
         callbacks=[generate_callback]
     )
+
+    # Save the model.
+    model.save("model.h5")
 
     # Plot the history.
     plot_history(history)
@@ -164,9 +167,9 @@ def create_model():
     input_shape = (input_length, len(character_set))
 
     model = models.Sequential()
-    #model.add(layers.LSTM(hidden_size, input_shape=input_shape, activation="relu"))
+    model.add(layers.LSTM(hidden_size, input_shape=input_shape, activation="relu"))
     #model.add(layers.SimpleRNN(hidden_size, input_shape=input_shape, activation="relu"))
-    model.add(layers.GRU(hidden_size, input_shape=input_shape, activation="relu"))
+    #model.add(layers.GRU(hidden_size, input_shape=input_shape, activation="relu"))
     model.add(layers.Dense(output_length * len(character_set), activation="relu"))
     model.add(layers.Reshape((output_length, len(character_set))))
     model.add(layers.TimeDistributed(layers.Dense(len(character_set), activation="softmax")))
@@ -283,6 +286,7 @@ def browser_download():
 
     files.download("accuracy.png")
     files.download("loss.png")
+    files.download("model.h5")
 
 
 if __name__ == "__main__":
