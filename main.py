@@ -225,6 +225,7 @@ def on_epoch_end(epoch, logs):
                 output_sequence = model.predict(np.expand_dims(input_sequence, axis=0))
                 output_sequence = output_sequence[0]
                 decoded_string = decode_sequence(output_sequence, temperature)
+                output_sequence = encode_string(decoded_string)
                 result_string += decoded_string
                 input_sequence = input_sequence[output_length:]
                 input_sequence = np.concatenate((input_sequence, output_sequence), axis=0)
